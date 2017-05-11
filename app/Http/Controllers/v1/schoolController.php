@@ -5,6 +5,7 @@ namespace App\Http\Controllers\v1;
 use App\Services\v1\schoolServices;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Mockery\Exception;
 
 class schoolController extends Controller
 {
@@ -27,14 +28,13 @@ class schoolController extends Controller
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+    public function insert(Request $request, $name, $email, $gender){
+        try{
+            $studentInfo = $this->courses->createStudent($request,$name, $email, $gender);
+            return request()->json($studentInfo, 201);
+        }catch (Exception $e){
+            return request()->json(['Message' => $e], 500 );
+        }
     }
 
     /**
@@ -45,7 +45,7 @@ class schoolController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -60,16 +60,6 @@ class schoolController extends Controller
         return response()->json($data);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.

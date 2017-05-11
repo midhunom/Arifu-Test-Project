@@ -17,4 +17,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('/v1/school', v1\schoolController::class);
+Route::resource('/v1/school', v1\schoolController::class,[
+    'except'=> ['create']
+]);

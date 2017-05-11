@@ -9,6 +9,19 @@ use Illuminate\Support\Facades\DB;
 
 class SchoolServices {
 
+    public function createStudent($req,$name, $email, $gender) {
+
+//        ** http://localhost:8000/user/$name/$email/$gender **
+        return DB::table('students')->insert(
+            array(
+                'full_name' =>   $name,
+                'email'   =>   $email,
+                'gender' => $gender
+            )
+        );
+
+
+    }
 
     public function getCourseRec() {
 
@@ -19,7 +32,6 @@ class SchoolServices {
         if(empty($parameters)){
             return $this->filterStudentsInfo(students::all());
         }
-        $includeParam = [];
 
         if (isset($parameters['course'])){
             $includeParam = explode(',', $parameters['course']);
@@ -29,9 +41,10 @@ class SchoolServices {
             return $this->getDailyReq($includeParam);
         }elseif (isset($parameters['certs'])){
             return $this->getCertsIssued();
+        }elseif (isset($parameters['create'])) {
+            $includeParam = explode(',', $parameters['create']);
+            return $this->createStudent();
         }
-
-
 
     }
 
@@ -67,7 +80,7 @@ class SchoolServices {
 
     public function getStudentApplied($keys = []) {
 
-//        **/api/v1/school?course=2**
+//        **http://localhost:8000/api/v1/school?course=2**
         return DB::table('courses_recs')
             ->select([DB::raw('COUNT(id) AS Num_students'), 'status'])
             ->groupBy('status')
@@ -77,7 +90,7 @@ class SchoolServices {
 
     public function getDailyReq($keys = []) {
 
-//        **/api/v1/school?date=2,2017-05-10,2017-05-12**
+//        **http://localhost:8000/api/v1/school?date=2,2017-05-10,2017-05-12**
         $records = [];
 
         $init_date = strtotime("$keys[1]");
@@ -115,7 +128,7 @@ class SchoolServices {
 
     public function getCertsIssued() {
 
-//        **/api/v1/school?certs=1**
+//        **http://localhost:8000/api/v1/school?certs=1**
         $data = [];
         $entries = $this->getCourseRec();
 

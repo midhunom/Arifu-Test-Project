@@ -15,3 +15,5 @@ Route::get('/', function () {
     return view('test');
 });
 
+Route::get('user/{name}/{email}/{gender}', 'v1\schoolController@insert');
+
