@@ -17,6 +17,9 @@ class CreateCoursesRecsTable extends Migration
             $table->increments('id');
             $table->integer('student_id');
             $table->integer('course_id');
+            $table->date('joined_at');
+            $table->string('status', 20)->default('start');
+
             $table->timestamps();
         });
     }

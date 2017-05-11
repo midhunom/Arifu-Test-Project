@@ -20,8 +20,11 @@ class schoolController extends Controller
      */
     public function index()
     {
-        $data = $this->courses->getCourseRec();
+        $parameters = request()->input();
+        $data= $this->courses->getAllStudents($parameters);
         return response()->json($data);
+
+
     }
 
     /**
@@ -53,7 +56,8 @@ class schoolController extends Controller
      */
     public function show($id)
     {
-        //
+        $data= $this->courses->getStudentInfo($id);
+        return response()->json($data);
     }
 
     /**
