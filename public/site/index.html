@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app>
+<html lang="en" ng-app="courseApp">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://bootswatch.com/paper/bootstrap.min.css" >
@@ -8,59 +8,141 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <script src="js/pross.js"></script>
 
     <title>school stuff</title>
+
+
 </head>
 <body>
-  <div class="container">
-      <div class="col-lg-6">
-          <form class="form-horizontal">
-              <fieldset>
-                  <legend>Insert Student infomation</legend>
-                  <div class="form-group">
-                      <label class="col-lg-2 control-label">Full Name</label>
-                      <div class="col-lg-10">
-                          <input type="text" class="form-control"  ng-model="name"   placeholder="e.g John Doe" >
-                      </div>
-                  </div>
-                  <div class="form-group">
-                      <label class="col-lg-2 control-label" >Email</label>
-                      <div class="col-lg-10">
-                          <input type="email" class="form-control"  ng-model="email" placeholder="e.g mail@something.com" >
-                      </div>
-                  </div>
+  <div class="container" ng-controller="statsController">
+      <div class="row">
+          <div class="col-lg-6">
 
-                  <div class="form-group">
-                      <label class="col-lg-2 control-label">Gender</label>
-                      <div class="col-lg-10">
-                          <div class="radio">
-                              <label>
-                                  <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
-                                  Male
-                              </label>
+              <form class="form-horizontal" name="studentForm" ng-submit="submitForm(student)">
+                  <fieldset>
+                      <legend>Insert Student infomation</legend>
+                      <div class="alert alert-dismissible alert-success" ng-show="response == 201">
+                          <button type="button" class="close" data-dismiss="alert">&times;</button>
+                          You successfully registered a student
+                      </div>
+                      <div class="form-group">
+                          <label class="col-lg-2 control-label">Full Name</label>
+                          <div class="col-lg-10">
+                              <input type="text" class="form-control" name="studentname" ng-model="student.name"   placeholder="e.g John Doe" required>
+                              <span ng-show="studentForm.studentname.$touched && studentForm.studentname.$error.required" style="color: red">Full name is required.</span>
                           </div>
-                          <div class="radio">
-                              <label>
-                                  <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-                                  Female
-                              </label>
+
+                      </div>
+                      <div class="form-group">
+                          <label class="col-lg-2 control-label" >Email</label>
+                          <div class="col-lg-10">
+                              <input type="email" class="form-control" name="studentemail"  ng-model="student.email" placeholder="e.g mail@something.com" required>
+                              <span ng-show="studentForm.studentemail.$touched && studentForm.studentemail.$error.required" style="color: red">An email is required.</span><br>
+                              <span ng-show="studentForm.studentemail.$touched && studentForm.studentemail.$error.email" style="color: red">Insert correct email format.</span>
                           </div>
                       </div>
-                  </div>
 
-                  <div class="form-group">
-                      <div class="col-lg-10 col-lg-offset-2">
-                          <button type="reset" class="btn btn-default">Cancel</button>
-                          <button type="submit" class="btn btn-primary">Submit</button>
+                      <div class="form-group">
+                          <label class="col-lg-2 control-label">Gender</label>
+                          <div class="col-lg-10">
+                              <div class="radio">
+                                  <label>
+                                      <input type="radio"  ng-model="student.gender"  name="optionsRadios" id="optionsRadios1" value="male" checked="">
+                                      Male
+                                  </label>
+                              </div>
+                              <div class="radio">
+                                  <label>
+                                      <input type="radio" ng-model="student.gender" name="optionsRadios" id="optionsRadios2" value="female">
+                                      Female
+                                  </label>
+                              </div>
+                          </div>
                       </div>
-                  </div>
-              </fieldset>
-          </form>
+                      <div class="form-group">
+                          <div class="col-lg-10 col-lg-offset-2">
+                              <button type="submit" class="btn btn-primary" ng-disabled="studentForm.$invalid">Submit</button>
+                          </div>
+                      </div>
+                  </fieldset>
+              </form>
+
+          </div>
+          <div class="col-lg-6">
+
+              <h4>Students</h4><span>Click on student to view mode details  at the bottom of the table</span>
+              <ul class="list-group">
+                  <li style="cursor: pointer" class="list-group-item" ng-repeat="student in students" ng-click="showInfo(student.href,student.fullname)">
+                      <span class="pull-right">{{student.email}} &nbsp;</span>
+                      {{student.fullname}}
+                  </li>
+              </ul>
+              <div>
+
+                  <table class="table table-striped">
+                      <thead>
+                      <tr>
+                          <th>Course Name</th>
+                          <th>Started at</th>
+                          <th>status</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr ng-repeat="studentInfo in studentdata">
+                          <h4 ng-if="studentdata.length == 1">No course being taken</h4>
+                          <h5>{{student_name}}</h5>
+                          <td>{{studentInfo.cousrse_name}}</td>
+                          <td>{{studentInfo.joined_at}}</td>
+                          <td ng-show="studentInfo.status == 'complete' ">Certificate awarded</td>
+                          <td ng-show="studentInfo.status == 'start' ">Course started</td>
+                      </tr>
+                      </tbody>
+                  </table>
+              </div>
+
+          </div>
+      </div>
+
+      <div class="row">
+          <div class="col-lg-3">
+              <h4>Courses</h4> <span>Click on course to view details</span>
+              <div class="list-group">
+                  <a href="" class="list-group-item" ng-repeat="course in courses" ng-click="courseDet(course.id,course.cousrse_name )">
+                      <h4 class="list-group-item-heading">{{course.cousrse_name}}</h4>
+                  </a>
+              </div>
+          </div>
+          <div class="col-lg-3" ng-show="disp">
+              <h4>{{coursename}}</h4>
+              <table class="table table-striped">
+                  <thead>
+                  <tr>
+                      <th>Number of Students</th>
+                      <th>Status</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr ng-repeat="coursedata in coursedatas">
+                      <h4 ng-if=" coursedatas.length == 0">Course has never been taken</h4>
+                      <td>{{coursedata.Num_students}}</td>
+                      <td ng-show="coursedata.status == 'complete' ">Certificate awarded</td>
+                      <td ng-show="coursedata.status == 'start' ">In progress</td>
+                  </tr>
+                  </tbody>
+              </table>
+          </div>
+          <div class="col-lg-3">
+              <h4>Courses certificates awarded</h4>
+              <div class="list-group">
+                  <a href="" class="list-group-item" ng-repeat="coursecert in collect track by $index" ng-hide="coursecert.length == 0" >
+                      <h5 class="list-group-item-heading" >{{coursecert[0].cousrse_name}}  <span class="badge pull-right">{{coursecert[0].Certs_issued}}</span><span class="pull-right" style="font-size: 13px">Certificates</span></h5>
+                  </a>
+              </div>
+          </div>
 
       </div>
-      <div class="col-lg-6">
 
-      </div>
   </div>
 </body>
 </html>

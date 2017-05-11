@@ -14,8 +14,8 @@ class SchoolServices {
 //        ** http://localhost:8000/user/$name/$email/$gender **
         return DB::table('students')->insert(
             array(
-                'full_name' =>   $name,
-                'email'   =>   $email,
+                'full_name' => $name,
+                'email' => $email,
                 'gender' => $gender
             )
         );
@@ -44,6 +44,8 @@ class SchoolServices {
         }elseif (isset($parameters['create'])) {
             $includeParam = explode(',', $parameters['create']);
             return $this->createStudent();
+        }elseif (isset($parameters['courses'])) {
+            return $this->getCourseRec();
         }
 
     }
@@ -70,7 +72,6 @@ class SchoolServices {
               'email' => $student->email,
               'gender' => $student->gender,
               'href' => route('school.show', ['id' => $student->id])
-
             ];
             $data[] = $entry;
         }
@@ -136,13 +137,10 @@ class SchoolServices {
             $rec = [
                 'id' => $entry->id
             ];
-
             $data[] = $rec;
         }
 
-
         $show = [];
-
 
         for ($d=0; $d<count($data); $d++) {
                $record = DB::table('courses_recs')
