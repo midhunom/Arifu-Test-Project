@@ -73,14 +73,14 @@
 
               <h4>Students</h4><span>Click on student to view mode details  at the bottom of the table</span>
               <ul class="list-group">
-                  <li style="cursor: pointer" class="list-group-item" ng-repeat="student in students" ng-click="showInfo(student.href,student.fullname)">
+                  <li style="cursor: pointer" class="list-group-item" ng-repeat="student in students" ng-click="showInfo(student.href,student.fullname); scrollToTable(tableStudent)">
                       <span class="pull-right">{{student.email}} &nbsp;</span>
                       {{student.fullname}}
                   </li>
               </ul>
               <div>
 
-                  <table class="table table-striped">
+                  <table id="tableStudent" class="table table-striped">
                       <thead>
                       <tr>
                           <th>Course Name</th>
@@ -108,7 +108,8 @@
           <div class="col-lg-3">
               <h4>Courses</h4> <span>Click on course to view details</span>
               <div class="list-group">
-                  <a href="" class="list-group-item" ng-repeat="course in courses" ng-click="courseDet(course.id,course.cousrse_name )">
+                  <a href="" class="list-group-item" ng-repeat="course in courses" ng-click="courseDet(course.id,course.cousrse_name ); courseApplic(course.id); scrollToTable(tableStudent);
+                  scrollToTable(tableApplication) ">
                       <h4 class="list-group-item-heading">{{course.cousrse_name}}</h4>
                   </a>
               </div>
@@ -132,6 +133,26 @@
                   </tbody>
               </table>
           </div>
+          <div class="col-lg-3" ng-show="disp">
+              <h4>{{coursename}} Applications</h4>
+              <table  class="table table-striped">
+                  <thead>
+                  <tr>
+                      <th>Date</th>
+                      <th>Applications</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr ng-repeat="(keys, value) in courseApps ">
+                      <td ng-repeat="(key, val) in value ">{{key}}</td>
+                      <td ng-repeat="(key, val) in value ">
+                          <span ng-repeat="(key1, val1) in val[0] ">{{val1}}</span>
+                      </td>
+                  </tr>
+                  </tbody>
+              </table>
+
+          </div>
           <div class="col-lg-3">
               <h4>Courses certificates awarded</h4>
               <div class="list-group">
@@ -140,9 +161,12 @@
                   </a>
               </div>
           </div>
-
       </div>
 
+      <div class="row">
+
+      </div>
+      <span id="tableApplication"></span>
   </div>
 </body>
 </html>

@@ -1,7 +1,7 @@
 
 var App = angular.module('courseApp', []);
 
-App.controller('statsController', function($scope, $http) {
+App.controller('statsController', function($scope, $http, $location, $anchorScroll) {
 
     $scope.student = {};
     $scope.student.gender = 'male';
@@ -48,7 +48,7 @@ App.controller('statsController', function($scope, $http) {
     $scope.showAllCourses = function() {
         $http.get("http://localhost:8000/api/v1/school?courses=1").then(function(data) {
             $scope.courses = data.data;
-           console.log($scope.courses);
+           //console.log($scope.courses);
         });
     }
 
@@ -72,16 +72,32 @@ App.controller('statsController', function($scope, $http) {
         $scope.collect = [];
         $http.get("http://localhost:8000/api/v1/school?certs=c").then(function(data) {
              $scope.coursecerts = data.data;
-            console.log( $scope.coursecerts.length);
+
             for($scope.d = 0; $scope.d<$scope.coursecerts.length; $scope.d++){
                $scope.collect.push($scope.coursecerts[$scope.d]);
-                //console.log($scope.collect) ;
+
             }
-               console.log($scope.collect) ;
+               //console.log($scope.collect) ;
         });
 
     }
     $scope.courseCerts();
+
+
+    $scope.scrollToTable = function($scrollPlace) {
+        $location.hash($scrollPlace);
+        $anchorScroll();
+    };
+
+    // ===get details about course application==
+    $scope.courseApplic = function($id){
+        $scope.disp = true;
+        $http.get("http://localhost:8000/api/v1/school?date="+$id+",2017-05-10,2017-05-14").then(function(data) {
+            $scope.courseApps = data.data;
+            console.log( $scope.courseApps);
+        });
+
+    }
 
 
 
