@@ -1,7 +1,7 @@
 
 var App = angular.module('courseApp', []);
 
-App.controller('statsController', function($scope, $http, $location, $anchorScroll) {
+App.controller('statsController', function($scope, $http, $location, $anchorScroll, schoolService) {
 
     $scope.student = {};
     $scope.student.gender = 'male';
@@ -17,7 +17,6 @@ App.controller('statsController', function($scope, $http, $location, $anchorScro
         }).then(function(data) {
             $scope.response = data.data;
             $scope.showAllStudents();
-            //console.log($scope.response);
             $scope.student.name = ''
             $scope.student.email = ''
 
@@ -25,12 +24,12 @@ App.controller('statsController', function($scope, $http, $location, $anchorScro
     };
 
     // ===get all students===
-    $scope.showAllStudents = function() {
-        $http.get("http://localhost:8000/api/v1/school").then(function(data) {
+    $scope.$scope.showAllStudents = function(){
+        schoolService.getAllStudents().then(function(data){
             $scope.students = data.data;
-            //console.log($scope.students);
         });
     }
+
     $scope.showAllStudents();
 
     // / ===get all students info===
@@ -46,7 +45,7 @@ App.controller('statsController', function($scope, $http, $location, $anchorScro
 
     // ===get all courses===
     $scope.showAllCourses = function() {
-        $http.get("http://localhost:8000/api/v1/school?courses=1").then(function(data) {
+        schoolService.getAllCourses().then(function(data) {
             $scope.courses = data.data;
            //console.log($scope.courses);
         });
@@ -58,7 +57,7 @@ App.controller('statsController', function($scope, $http, $location, $anchorScro
     // ===get details about course==
     $scope.courseDet = function($id, $courseName){
         $scope.disp = true;
-            $http.get("http://localhost:8000/api/v1/school?course="+$id).then(function(data) {
+            schoolService.getCoursedetails($id).then(function(data) {
             $scope.coursename = $courseName;
             $scope.coursedatas = data.data;
             //console.log( $scope.coursedatas);
@@ -70,7 +69,7 @@ App.controller('statsController', function($scope, $http, $location, $anchorScro
     $scope.courseCerts = function(){
 
         $scope.collect = [];
-        $http.get("http://localhost:8000/api/v1/school?certs=c").then(function(data) {
+        schoolService.getCourseCert().then(function(data) {
              $scope.coursecerts = data.data;
 
             for($scope.d = 0; $scope.d<$scope.coursecerts.length; $scope.d++){
@@ -92,9 +91,9 @@ App.controller('statsController', function($scope, $http, $location, $anchorScro
     // ===get details about course application==
     $scope.courseApplic = function($id){
         $scope.disp = true;
-        $http.get("http://localhost:8000/api/v1/school?date="+$id+",2017-05-10,2017-05-14").then(function(data) {
+        schoolService.getCourseAppDetails($id).then(function(data) {
             $scope.courseApps = data.data;
-            console.log( $scope.courseApps);
+            //console.log( $scope.courseApps);
         });
 
     }
